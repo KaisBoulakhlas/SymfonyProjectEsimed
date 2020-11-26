@@ -1,0 +1,33 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Editer un administrateur{% endblock %}
+
+{% block body %}
+    <div class="container mt-5">
+        <h1>Editer un administrateur</h1>
+        <hr/>
+        <div class="container">
+            {{ form_start(form) }}
+            <div class="form-row">
+                <div class="form-group col-md-4">
+                    {{ form_row(form.email, {'attr': {'class': 'form-control'}} ) }}
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-4">
+                    {{ form_row(form.username, {'attr': {'class': 'form-control'}} ) }}
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-4">
+                    {{ form_row(form.plainPassword, {'attr': {'class': 'form-control'}}) }}
+                </div>
+            </div>
+            <div class="form-row">
+                {{ form_widget(form)}}
+                <button class="btn btn-outline-warning" style="margin-left:5px;">{{ button|default('Editer')}}</button>
+                {{ form_end(form)}}
+            </div>
+        </div>
+    </div>
+{% endblock %}
