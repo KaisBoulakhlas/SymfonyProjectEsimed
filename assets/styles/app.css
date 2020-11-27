@@ -41,6 +41,10 @@ table thead tr th {
     text-align: center;
 }
 
+td {
+    text-align: center;
+}
+
 hr.dotted {
     border-top: 2px dotted #999;
 }

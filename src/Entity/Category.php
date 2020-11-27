@@ -16,7 +16,6 @@ class Category
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
-     * @Assert\NotBlank
      * @ORM\Column(type="integer")
      */
     private ?int $id;
@@ -28,7 +27,7 @@ class Category
     private ?string $name;
 
     /**
-     * @ORM\OneToMany(targetEntity=Advert::class, mappedBy="category")
+     * @ORM\OneToMany(targetEntity=Advert::class, mappedBy="category", cascade={"persist", "remove"})
      */
     private $adverts;
 

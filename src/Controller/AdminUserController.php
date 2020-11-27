@@ -54,12 +54,11 @@ class AdminUserController extends AbstractController
         if($form->isSubmitted() && $form->isValid()){
             $em->persist($adminUser);
             $em->flush();
-            $this->addFlash('success', "L'administrateur'". $adminUser->getUsername() . "a été créé avec succès.");
+            $this->addFlash('success', "L'administrateur ". $adminUser->getUsername() . " a été créé avec succès.");
             return $this->redirectToRoute('admin.users');
         }
 
         return $this->render('admin_user/add.html.twig', [
-            'adminUser' => $adminUser,
             'form' => $form->createView()
         ]);
     }
@@ -83,8 +82,6 @@ class AdminUserController extends AbstractController
         };
 
         return $this->render('admin_user/edit.html.twig', [
-            'adminUser' => $adminUser,
-            'request' => $request,
             'form' => $form->createView(),
 
         ]);
