@@ -4,14 +4,21 @@ namespace App\Controller;
 
 use App\Entity\Category;
 use App\Form\CategoryType;
+use App\Repository\AdvertRepository;
 use App\Repository\CategoryRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
+/**
+ * Class HomeController
+ * @package App\Controller
+ * @IsGranted("ROLE_ADMIN")
+ */
 class CategoryController extends AbstractController
 {
     protected $em;
@@ -30,6 +37,19 @@ class CategoryController extends AbstractController
         $categories = $paginator->paginate($datas, $request->query->getInt('page', 1), 30);
         return $this->render('category/index.html.twig', [
             'categories' => $categories
+        ]);
+    }
+
+    /**
+     * @Route("admin/adverts/{id}", name="admin.adverts.show")
+     */
+    public function show(Category $category,AdvertRepository $advertRepository, PaginatorInterface $paginator,Request $request) : Response
+    {
+        $datas =  $advertRepository->findAllAvertsByCategory($category);
+        $adverts = $paginator->paginate($datas, $request->query->getInt('page', 1), 30);
+        return $this->render('category/show.html.twig', [
+            'category' => $category,
+            'adverts' => $adverts
         ]);
     }
 

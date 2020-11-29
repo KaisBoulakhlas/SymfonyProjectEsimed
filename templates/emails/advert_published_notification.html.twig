@@ -1,0 +1,14 @@
+{% extends '@email/default/notification/body.html.twig' %}
+
+{% block content %}
+    <p>Titre: {{ advert.title }}</p>
+    <p>Email : {{ advert.email }}</p>
+    <p>
+        {{ advert.content|nl2br }}
+    </p>
+{% endblock %}
+
+{% block action %}
+    <p>L'annonce {{ advert.title }} a été bien publiée.</p>
+    <button href="{{ url('admin.advert.show', {'id': advert.id}) }}">Voir</button>
+{% endblock %}

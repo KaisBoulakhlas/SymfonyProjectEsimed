@@ -36,7 +36,15 @@ services:
             - { name: doctrine.event_listener, event: prePersist }
             - { name: doctrine.event_listener, event: preUpdate }
 
-    App\EventListener\CreatedDateListener:
+    App\EventListener\CreatedAdvertListener:
         tags:
             - { name: doctrine.event_listener, event: prePersist }
+            - { name: doctrine.event_listener, event: postPersist }
+
+    app.workflow.listener.advert:
+        class: App\EventListener\PublishedAdvertSubscriber
+        tags:
+            - { name: kernel.event_subscriber }
+
+
 

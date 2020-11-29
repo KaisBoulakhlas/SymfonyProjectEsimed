@@ -2,11 +2,17 @@
 
 namespace App\Controller;
 
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
+/**
+ * Class HomeController
+ * @package App\Controller
+ * @IsGranted("IS_AUTHENTICATED_ANONYMOUSLY")
+ */
 class SecurityController extends AbstractController
 {
     /**
@@ -17,7 +23,6 @@ class SecurityController extends AbstractController
          if ($this->getUser()) {
              return $this->redirectToRoute('admin.categories');
          }
-
         // get the login error if there is one
         $error = $authenticationUtils->getLastAuthenticationError();
         // last username entered by the user

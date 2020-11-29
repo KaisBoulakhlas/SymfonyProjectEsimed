@@ -1,0 +1,73 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Annonces de {{ category.name }}{% endblock %}
+
+{% block body %}
+<div class="container mt-4">
+    <h1>Catégorie : <small>{{ category.name }}</small> <a href="{{ path('admin.categories') }}" class="btn btn-sm btn-outline-secondary"><i class="material-icons" >backspace</i></a>
+    </h1>
+    <hr class="dotted"/>
+    {% for type, messages in app.flashes %}
+        {% for message in messages %}
+            <div class="alert alert-{{ type }}" role="alert">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endfor %}
+    <div class="container-fluid shadow-lg rounded-lg border border-info" style="background-color: lightgreen;width:calc(100vw - 20vw)">
+        <div class="container pt-3">
+            <table class="table table-striped table-hover table-bordered table-light shadow-lg rounded" style="margin-left:-3%;">
+                <thead class="table-primary">
+                    <tr>
+                        <th>Détails</th>
+                        <th>Id</th>
+                        <th>Titre</th>
+                        <th>Description</th>
+                        <th>Auteur</th>
+                        <th>Email</th>
+                        <th>Prix</th>
+                        <th>Etat</th>
+                        <th>Créé</th>
+                        <th>Publié</th>
+                        <th>Photos</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for advert in adverts %}
+                        <tr>
+                            <td>
+                                <a href="{{ path('admin.advert.show', {id: advert.id}) }}" class="btn btn-sm btn-outline-primary"><i class="material-icons" >visibility</i></a>
+                            </td>
+                            <td>{{ advert.id }}</td>
+                            <td>{{ advert.title }}</td>
+                            <td>
+                                <button type="button" data-content="{{ advert.content }}" class="btn btn-sm btn-outline-warning advertinfo" data-toggle="modal" data-target="#exampleModal">
+                                    <i class="material-icons" >search</i>
+                                </button>
+                            </td>
+                            <td>{{ advert.author }}</td>
+                            <td>{{ advert.email }}</td>
+                            <td>{{ advert.price }} €</td>
+                            <td>{{ advert.state }}</td>
+                            <td>{{ advert.createdAt|date("d/m/Y  H:i") }}</td>
+                            {% if advert.publishedAt  %}
+                                <td>{{ advert.publishedAt|date("d/m/Y  H:i") }}</td>
+                            {% else %}
+                                <td>Pas publiée.</td>
+                            {% endif %}
+                            <td>{{ advert.pictures | length }}</td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td colspan="11"><strong><em>Aucunes annonces pour {{ category.name }}.</em></strong></td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="pagination" style="float:right;margin-top:10px;">
+            {{ knp_pagination_render(adverts) }}
+        </div>
+    </div>
+</div>
+{% endblock %}

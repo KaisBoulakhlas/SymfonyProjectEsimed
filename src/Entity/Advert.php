@@ -2,21 +2,34 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiFilter;
+use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\AdvertRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\DateFilter;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\RangeFilter;
 
 /**
  * @ORM\Entity(repositoryClass=AdvertRepository::class)
+ * @ApiResource(
+ *     itemOperations={"get"},
+ *     collectionOperations={"get","post"},
+ *     denormalizationContext={"groups"={"write"}}
+ * )
+ * @ApiFilter(OrderFilter::class, properties={"price","publishedAt"})
+ * @ApiFilter(RangeFilter::class, properties={"price"})
  */
 class Advert
 {
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
-     * @Assert\NotBlank
      * @ORM\Column(type="integer")
      */
     private $id;
@@ -27,9 +40,10 @@ class Advert
      * @Assert\Length(
      *      min = 3,
      *      max = 100,
-     *      minMessage = "Your first name must be at least {{ limit }} characters long",
-     *      maxMessage = "Your first name cannot be longer than {{ limit }} characters"
+     *      minMessage = "Le titre doit avoir au moins {{ limit }} caractères",
+     *      maxMessage = "Le titre ne doit pas dépasser {{ limit }} caractères"
      * )
+     * @Groups("write")
      */
     private $title;
 
@@ -38,28 +52,32 @@ class Advert
      * @Assert\NotBlank
      * @Assert\Length(
      *      min = 1,
-     *      max = 200,
-     *      minMessage = "Your first name must be at least {{ limit }} characters long",
-     *      maxMessage = "Your first name cannot be longer than {{ limit }} characters"
+     *      max = 1200,
+     *      maxMessage = "Le contenu ne doit pas dépasser  {{ limit }} caractères"
      * )
+     * @Groups("write")
      */
     private $content;
 
     /**
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank
+     * @Groups("write")
      */
     private $author;
 
     /**
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank
+     * @Groups("write")
      */
     private $email;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Category::class, inversedBy="adverts",cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity=Category::class, inversedBy="adverts", cascade={"persist"})
      * @Assert\NotBlank
+     * @ApiFilter(SearchFilter::class, properties={"category.id": "iexact"})
+     * @Groups("write")
      */
     private $category;
 
@@ -68,22 +86,20 @@ class Advert
      * @Assert\NotBlank
      * @Assert\Length(
      *      min = 1,
-     *      max = 1000000.00,
-     *      minMessage = "Your first name must be at least {{ limit }} characters long",
-     *      maxMessage = "Your first name cannot be longer than {{ limit }} characters"
+     *      max = 1000000,
+     *      minMessage = "Le prix doit être compris entre {{ min }}€ et {{ max }}€."
      * )
+     * @Groups("write")
      */
     private $price;
 
     /**
-     * @ORM\Column(type="string", length=255)
-     * @Assert\NotBlank
+     * @ORM\Column(type="string", length=255, options={"default": "draft"})
      */
     private $state;
 
     /**
      * @ORM\Column(type="datetime")
-     * @Assert\NotBlank
      */
     private \DateTimeInterface $createdAt;
 
@@ -93,7 +109,7 @@ class Advert
     private ?\DateTimeInterface $publishedAt;
 
     /**
-     * @ORM\OneToMany(targetEntity=Picture::class, mappedBy="advert")
+     * @ORM\OneToMany(targetEntity=Picture::class, mappedBy="advert", cascade={"persist","remove"})
      */
     private $pictures;
 

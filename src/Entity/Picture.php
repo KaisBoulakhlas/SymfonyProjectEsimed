@@ -2,36 +2,75 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiProperty;
+use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\PictureRepository;
+use App\Controller\CreatePictureAction;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\HttpFoundation\File\File;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 /**
  * @ORM\Entity(repositoryClass=PictureRepository::class)
  * @Vich\Uploadable
+ * @ApiResource(
+ *     iri="http://schema.org/MediaObject",
+ *     normalizationContext={
+ *         "groups"={"picture_read"}
+ *     },
+ *     itemOperations={"get"},
+ *     collectionOperations={
+ *       "get",
+ *       "post"={
+ *             "controller"=CreatePictureAction::class,
+ *             "deserialize"=false,
+ *             "security"="is_granted('IS_AUTHENTICATED_ANONYMOUSLY')",
+ *             "validation_groups"={"Default", "picture_create"},
+ *             "openapi_context"={
+ *                 "requestBody"={
+ *                     "content"={
+ *                         "multipart/form-data"={
+ *                             "schema"={
+ *                                 "type"="object",
+ *                                 "properties"={
+ *                                     "file"={
+ *                                         "type"="string",
+ *                                         "format"="binary"
+ *                                     },
+ *                                      "advert"={
+ *                                         "type"="int",
+ *                                         "format"="int"
+ *                                     }
+ *                                 }
+ *                             }
+ *                         }
+ *                     }
+ *                 }
+ *             }
+ *         }
+ *     }
+ * )
  */
 class Picture
 {
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
-     * @Assert\NotBlank
      * @ORM\Column(type="integer")
      */
     private $id;
 
     /**
-     * @Vich\UploadableField(mapping="adverts")
-     *
+     * @Vich\UploadableField(mapping="pictures", fileNameProperty="path")
+     * @Assert\NotNull(groups={"picture_create"})
      * @var File
      */
     private ?File $file = null;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Assert\NotBlank
      */
     private ?string $path;
 
@@ -43,12 +82,13 @@ class Picture
 
     /**
      * @ORM\ManyToOne(targetEntity=Advert::class, inversedBy="pictures")
-     * @ORM\JoinColumn(onDelete="CASCADE", nullable=true)
+     * @ORM\JoinColumn(nullable=true, name="advert_id", referencedColumnName="id", onDelete="CASCADE")
      */
     private ?Advert $advert;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
+     * @ApiProperty(iri="http://schema.org/contentUrl")
+     * @Groups({"picture_read"})
      */
     private $contentUrl;
 

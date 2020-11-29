@@ -1,0 +1,23 @@
+{% extends '@email/default/notification/body.html.twig' %}
+
+{% block content %}
+    <p>Titre: {{ advert.title }}</p>
+    <p>Email : {{ advert.email }}</p>
+    <p>
+        {{ advert.content|nl2br }}
+    </p>
+    <p>Prix : {{ advert.price }}</p>
+    <p>Etat : {{ advert.state }}</p>
+
+{% endblock %}
+
+{% block action %}
+    <p>L'annonce {{ advert.title }} a été bien créée.</p>
+    <button href="{{ url('admin.advert.show', {'id': advert.id}) }}">Voir</button>
+    {% if workflow_can(advert, 'to_published') %}
+        <button href="{{ url('admin.advert.change_state', {'transition': 'to_published', 'id': advert.id}) }}">Publier</button>
+    {% endif %}
+    {% if workflow_can(advert, 'to_rejected') %}
+        <button href="{{ url('admin.advert.change_state', {'transition': 'to_rejected', 'id': advert.id}) }}">Rejeter</button>
+    {% endif %}
+{% endblock %}

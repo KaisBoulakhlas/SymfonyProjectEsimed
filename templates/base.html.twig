@@ -2,14 +2,14 @@
 <html>
     <head>
         <meta charset="UTF-8">
-        <title>{% block title %}Welcome!{% endblock %}</title>
+        <title>{% block title %}Leboangle{% endblock %}</title>
         {% block stylesheets %}{{ encore_entry_link_tags('app') }}{% endblock %}
     </head>
     <body>
             {% if app.user %}
                 {% if is_granted("ROLE_ADMIN") %}
                     <nav class="navbar navbar-expand-lg navbar-light" style="background: linear-gradient(#9198e5, #e66465);">
-                        <a class="navbar-brand" id="logo" href="{{ path('admin.users') }}" style="font-family: 'Pacifico', cursive;color: white;font-size: 25px;">Lebonangle</a>
+                        <a class="navbar-brand" id="logo" href="{{ path('admin.categories') }}" style="font-family: 'Pacifico', cursive;color: white;font-size: 25px;">Lebonangle</a>
                         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
                             <span class="navbar-toggler-icon"></span>
                         </button>
@@ -19,18 +19,29 @@
                                     <a class="nav-link" href="{{ path('admin.categories') }}" id="list">Catégories</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" href="{{ path('admin.users') }}" id="list">Administrateurs</a>
+                                    <a class="nav-link" href="{{ path('admin.users') }}" id="list2">Administrateurs</a>
                                 </li>
                             </ul>
                         </div>
                         <form class="form-inline my-2 my-lg-0">
-                            <a href="{{ path('app_logout') }}" class="btn btn-sm btn-outline-secondary text-dark" role="button">Se déconnecter</a>
+                            <a href="{{ path('app_logout') }}" class="btn btn-sm btn-outline-danger text-light" role="button">Se déconnecter</a>
                         </form>
                     </nav>
                 {% endif %}
             {% endif %}
-        {% block body %}
 
+            <!-- Modal pour affichage description -->
+            <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog"  aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-body"></div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% block body %}
         {% endblock %}
         {% block javascript %}{{ encore_entry_script_tags('app') }}{% endblock %}
     </body>

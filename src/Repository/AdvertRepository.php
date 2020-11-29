@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Advert;
+use App\Entity\Category;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -19,22 +20,20 @@ class AdvertRepository extends ServiceEntityRepository
         parent::__construct($registry, Advert::class);
     }
 
-    // /**
-    //  * @return Advert[] Returns an array of Advert objects
-    //  */
-    /*
-    public function findByExampleField($value)
+   /**
+    * @return Advert[] Returns an array of Advert objects
+    */
+
+    public function findAllAvertsByCategory(Category $category)
     {
-        return $this->createQueryBuilder('a')
-            ->andWhere('a.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('a.id', 'ASC')
-            ->setMaxResults(10)
+        return $this->createQueryBuilder('adverts')
+            ->andWhere('adverts.category = :category')
+            ->setParameter('category', $category)
             ->getQuery()
             ->getResult()
         ;
     }
-    */
+
 
     /*
     public function findOneBySomeField($value): ?Advert

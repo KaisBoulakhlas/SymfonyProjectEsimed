@@ -1,0 +1,53 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Annonce {{ advert.title }}{% endblock %}
+
+{% block body %}
+<div class="container mt-4">
+    <div class="card shadow-lg rounded-lg border border-info" style="background-color:lightgray;">
+        <div class="card-body">
+            <div class="card-title">
+                <h5 style=" font-family: 'Comic Sans MS', cursive;font-weight: normal;font-size: 24px;">
+                    Annonce n° {{ advert.id }}
+                    <a href="{{ path('admin.adverts.show', {id: advert.category.id }) }}" class="btn btn-sm btn-outline-secondary"><i class="material-icons" >backspace</i></a>
+                </h5>
+            </div>
+            <hr class="dotted">
+            <div class="form-group" style="margin-left:5px;">
+                <div class="form-row">
+                    <p class="card-text"><span style=" font-family: 'Comic Sans MS', cursive;  font-weight: normal;">Titre</span> : <strong>{{ advert.title }}</strong></p>
+                    <p class="card-text"><span style=" font-family: 'Comic Sans MS', cursive;  font-weight: normal;margin-left:30px;">Auteur </span>: <strong>{{ advert.author }}</strong></p>
+                </div>
+                <div class="form-row">
+                    <p class="card-text"><span style=" font-family: 'Comic Sans MS', cursive;  font-weight: normal;">Email</span> : <strong>{{ advert.email }}</strong></p>
+                    <p class="card-text"><span style=" font-family: 'Comic Sans MS', cursive;  font-weight: normal;margin-left:30px;">Prix</span> : <strong>{{ advert.price }} €</strong></p>
+                </div>
+                <div class="form-row">
+                    <p class="card-text"><span style=" font-family: 'Comic Sans MS', cursive;  font-weight: normal;">Etat</span> : <strong>{{ advert.state }}</strong></p>
+                    <p class="card-text"><span style=" font-family: 'Comic Sans MS', cursive;  font-weight: normal;margin-left:30px;">Créé le</span> : <strong>{{ advert.createdAt|date("d/m/Y à H:i")}}</strong></p>
+                </div>
+            </div>
+            {% if advert.publishedAt  %}
+                <p class="card-text"><span style=" font-family: 'Comic Sans MS', cursive;  font-weight: normal;">Publié le </span> : <strong>{{ advert.publishedAt|date("d/m/Y à H:i")}}</strong></p>
+            {% else %}
+                <p class="card-text"><span style=" font-family: 'Comic Sans MS', cursive;  font-weight: normal;"><strong>Pas publiée.</strong></span></p>
+            {% endif %}
+            {% if workflow_can(advert, 'to_published') %}
+                <a href="{{ path('admin.advert.change_state', {'transition': 'to_published', 'id': advert.id}) }}" class="btn btn-sm btn-outline-success">Publier</a>
+            {% endif %}
+            {% if workflow_can(advert, 'to_rejected') %}
+                <a href="{{ path('admin.advert.change_state', {'transition': 'to_rejected', 'id': advert.id}) }}" class="btn btn-sm btn-outline-danger">Rejeter</a>
+            {% endif %}
+            <hr class="dotted">
+            <p>Photos :</p>
+            <div class="d-flex border p-2" style="display:flex;flex-wrap: wrap;">
+                {% for picture in pictures %}
+                    <img class="img-thumbnail border-dark align-self-start justify-content-center" style="margin-left:10px;margin-top:5px;" src="{{ vich_uploader_asset(picture, 'file') }}" title="{{ picture.path }}" alt="{{ picture.path }}" width="200" height="150"/>
+                {% else %}
+                    <span style="margin-left:40%;">Pas de photos disponible.</span>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
