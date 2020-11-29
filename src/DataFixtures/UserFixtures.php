@@ -26,7 +26,7 @@ class UserFixtures extends Fixture
             $admin->setUsername($faker->userName);
             $admin->setPlainPassword('test');
 
-            for($j = 0; $j < 3; $j++){
+            for($j = 0; $j < 1; $j++){
                 $advert = new Advert();
                 $advert->setTitle($faker->title);
                 $advert->setEmail($faker->email);
