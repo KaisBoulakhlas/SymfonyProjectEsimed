@@ -40,10 +40,12 @@ class CreatedAdvertListener
             $date = new \DateTime();
             if(true === property_exists($advert, 'state')){
                 $advert->setState("draft");
+                $advert->setPublishedAt(null);
             }
 
             $date->setTimezone(new \DateTimeZone('Europe/Paris'));
             $advert->setCreatedAt($date);
+
         }
     }
 
@@ -57,7 +59,7 @@ class CreatedAdvertListener
          */
         if($args->getEntity() instanceof Advert){
             $advert = $args->getEntity();
-            $this->notifier->send(new AdvertCreatedNotification($advert,$this->manager), ...$this->notifier->getAdminRecipients());
+           // $this->notifier->send(new AdvertCreatedNotification($advert,$this->manager), ...$this->notifier->getAdminRecipients());
         }
     }
 }

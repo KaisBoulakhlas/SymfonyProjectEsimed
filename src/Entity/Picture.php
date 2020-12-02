@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiProperty;
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\PictureRepository;
@@ -10,6 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 /**
@@ -83,6 +85,8 @@ class Picture
     /**
      * @ORM\ManyToOne(targetEntity=Advert::class, inversedBy="pictures")
      * @ORM\JoinColumn(nullable=true, name="advert_id", referencedColumnName="id", onDelete="CASCADE")
+     * @ApiFilter(SearchFilter::class, properties={"advert.id": "iexact"})
+     * @Groups("read")
      */
     private ?Advert $advert;
 

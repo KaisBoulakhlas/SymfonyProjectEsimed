@@ -1,0 +1,6 @@
+App\Entity\AdminUser:
+  adminuser_{1..10}:
+    email: <email()>
+    roles: ['ROLE_ADMIN']
+    plainPassword: 'test'
+    username: <username()>

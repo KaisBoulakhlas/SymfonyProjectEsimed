@@ -5,6 +5,7 @@ namespace App\Entity;
 use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\AdvertRepository;
+use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -14,12 +15,13 @@ use Symfony\Component\Validator\Constraints as Assert;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\RangeFilter;
+use App\Controller\GetAdvertsPublished;
 
 /**
  * @ORM\Entity(repositoryClass=AdvertRepository::class)
  * @ApiResource(
  *     itemOperations={"get"},
- *     collectionOperations={"get","post"},
+ *     collectionOperations={"get"={"controller"=GetAdvertsPublished::class},"post"},
  *     denormalizationContext={"groups"={"write"}}
  * )
  * @ApiFilter(OrderFilter::class, properties={"price","publishedAt"})
@@ -116,6 +118,8 @@ class Advert
     public function __construct()
     {
         $this->pictures = new ArrayCollection();
+        $this->createdAt = new DateTimeImmutable();
+        $this->publishedAt = new DateTimeImmutable();
     }
 
     public function getId(): ?int

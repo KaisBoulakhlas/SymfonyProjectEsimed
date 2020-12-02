@@ -43,7 +43,7 @@ class PublishedAdvertSubscriber implements EventSubscriberInterface
             $date = new \DateTime();
             $date->setTimezone(new \DateTimeZone('Europe/Paris'));
             $advert->setPublishedAt($date);
-            $this->notifier->send(new AdvertPublishedNotification($advert), ...$this->notifier->getAdminRecipients());
+          //  $this->notifier->send(new AdvertPublishedNotification($advert), ...$this->notifier->getAdminRecipients());
         }
     }
 }
