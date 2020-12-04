@@ -20,19 +20,21 @@ final class CreatePictureAction
     {
         $uploadedFile = $request->files->get('file');
         $advertId     = (int)$request->get('advert');
-        $advert = $this->manager->getRepository(Advert::class)->find($advertId);
+
 
         if (!$uploadedFile) {
             throw new BadRequestHttpException('"file" is required');
         }
 
-        if (!$advert) {
-            throw new BadRequestHttpException('"advert id" is required');
-        }
 
         $picture = new Picture();
         $picture->setFile($uploadedFile);
-        $picture->setAdvert($advert);
+        
+        if($advertId){
+            $advert = $this->manager->getRepository(Advert::class)->find($advertId);
+            $picture->setAdvert($advert);
+        }
+
         return $picture;
     }
 }

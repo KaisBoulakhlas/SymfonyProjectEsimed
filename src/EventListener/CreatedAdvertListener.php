@@ -59,7 +59,7 @@ class CreatedAdvertListener
          */
         if($args->getEntity() instanceof Advert){
             $advert = $args->getEntity();
-           // $this->notifier->send(new AdvertCreatedNotification($advert,$this->manager), ...$this->notifier->getAdminRecipients());
+            $this->notifier->send(new AdvertCreatedNotification($advert,$this->manager), ...$this->notifier->getAdminRecipients());
         }
     }
 }
